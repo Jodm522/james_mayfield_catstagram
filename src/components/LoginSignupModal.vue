@@ -5,8 +5,8 @@
     <div class="loginSignupFormContainer">
 <div class="loginSignUpButtons">
     
-    <div class="LoginSignupSelector" v-bind:class="[loginIsActive? `selected`: 'unselected']" @click="toggleLogin()">Login</div>
-    <div class="LoginSignUpSelector" v-bind:class="[signupIsActive? `selected`: 'unselected']" @click="toggleSignup()">Sign up</div>
+    <div class="LoginSignupSelector" v-bind:class="[loginIsActive? `selected`: 'unselected']" @click="toggleLogin">Login</div>
+    <div class="LoginSignUpSelector" v-bind:class="[signupIsActive? `selected`: 'unselected']" @click="toggleSignup">Sign up</div>
     <!-- <div @click="closeModal">{{ showMenuModal }}</div> -->
 </div>
 
@@ -26,7 +26,10 @@
      <div class="loginErrorContainer"><div v-if="loginError" class="loginAlert">{{ loginAlert }}</div></div>
 </div>
 <p v-if="isLoading" class="loadingP" >Authenticating...</p>
-    <div v-else class="formButtonContainer">
+<p v-else-if="loginSuccessful">
+<img class="successCheck" src="../assets/images/successCheck.png"/>
+</p>
+<div v-else class="formButtonContainer">
     
     <button class="formButton" @click="submitLogin">Login</button>
     <button class="formButton" @click="closeModal">Cancel</button>
@@ -74,6 +77,9 @@
 </div>
  <div class="signupErrorContainer"><div v-if="passwordSignupError" class="loginAlert">{{ passwordAlert }}</div></div>
  <p v-if="isLoading" class="loadingP" >Authenticating...</p>
+ <p v-else-if="loginSuccessful">
+<img class="successCheck" src="../assets/images/successCheck.png"/>
+</p>
 <div v-else class="signupPasswordButtonContainer">
 <button class="signupFormButton" @click="signupEmailValidated= false">Back</button>
 <button class="signupFormButton" @click="validatePasswords">Sign up</button>
@@ -124,8 +130,8 @@ export default{
             passwordSignupError:false,
             passwordAlert:"",
             //UX enhancer 
-            isLoading: false
-            
+            isLoading: false,
+            loginSuccessful:false
 
         }
     
@@ -155,21 +161,24 @@ methods:{
         }
     },
     async submitSignup(){
+        this.passwordSignupError=false
         this.isLoading=true
        await this.$store.dispatch('signup',{
         email: this.signupEmail,
         password: this.signupPassword,
         firstName: this.signupFirstName,
         lastName: this.signupLastName
-    } ).then(()=>{this.isloading=false})
-    .catch((error)=>{console.log(error),this.loginError= true, this.isLoading= false, this.passwordSignupError = true, this.passwordAlert="Error- Please try a new email address"})},
-    async  submitLogin(){
+         })
+         .then((res)=>{console.log(res),this.isLoading=false, this.successfulLogin()})
+         .catch((error)=>{console.log(error),this.loginError= true, this.isLoading= false, this.passwordSignupError = true, this.passwordAlert="Error- Please try a new email address"})
+    },
+    async submitLogin(){
         this.loginError= false
         this.isLoading = true
         await this.$store.dispatch('login',{
             email: this.loginEmail,
             password: this.loginPassword
-        }).then((res)=>{console.log(res);this.isLoading = false})
+        }).then((res)=>{console.log(res);this.isLoading = false, this.successfulLogin()})
         .catch((error)=>{console.log(error),this.loginError= true, this.isLoading= false})
     },
     cancelButtonClicked(){
@@ -228,6 +237,10 @@ methods:{
             this.passwordAlert = "Passwords do not match"
         }
         else(this.submitSignup())
+    },
+    successfulLogin(){
+        this.loginSuccessful=true
+        setTimeout(()=>{this.closeModal()}, 2000)
     }
     }
 }
@@ -450,5 +463,16 @@ input[type=text], input[type=password]{
 		91%{
 			color: rgb(255,0,127);
 		}
+}
+.successCheck{
+    /* background-color: aqua; */
+    display: flex;
+    margin: auto;
+    height:6vh;
+    animation: 1.5s fadeSpin;
+}
+@keyframes fadeSpin{
+    0% { opacity: 0; transform: rotate(180deg);}
+    100%{ opacity: 1;}
 }
 </style>

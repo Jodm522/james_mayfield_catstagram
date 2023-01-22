@@ -74,9 +74,10 @@ export default{
         })
     }
     },
-    beforeMount(){
-    this.getPosts()
-
+    watch:{
+        pk:function(){
+            this.getPosts()
+        }
   }
 
 
@@ -240,7 +241,7 @@ height:35%
 .usernameComment{
     /* background-color: aqua; */
     width:75%;
-    overflow: scroll;
+    overflow-y: scroll;
     scrollbar-width: none;
 }
 .usernameHolder{

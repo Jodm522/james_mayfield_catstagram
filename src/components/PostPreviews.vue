@@ -1,12 +1,19 @@
 <script setup>
+import PostModal from './PostModal.vue';
+
 </script>
 
 <template>
     <div>
       <!-- Mobile Phone Setup -->
-      <MqResponsive target = "phone">
-<div id="mobilePostContainer">
+     
 
+      <MqResponsive target = "phone"> 
+        <VueFinalModal class="singlePostContainer" v-model="postModalOpen">
+    <PostModal @close-modal="postModalToggle" :pk="singlePostPk" />
+</VueFinalModal>    
+<div id="mobilePostContainer">
+  
       <div id="singleMobilePostCard" v-for="post in posts" @click="openPostModal(post.pk)">
         <v-lazy-image v-bind:src="`${post.imageURL}`"
          onerror="this.onerror=null; this.src ='/src/assets/images/loss.jpg'"
@@ -37,16 +44,20 @@
 import axios from 'axios'
 import { MqResponsive } from "vue3-mq";
 import VLazyImage from "v-lazy-image";
+import { VueFinalModal } from 'vue-final-modal';
 const api = 'http://catstagram.lofty.codes/api/posts/'
 
 export default{
   components: {
     "v-lazy-image": VLazyImage,
-    MqResponsive
+    MqResponsive ,
+    VueFinalModal
   },
   data(){
     return{
-      singlePostPk:null
+      singlePostPk:null,
+      postModalOpen:false,
+      posts:[]
     }
   },
   methods:{
@@ -68,17 +79,18 @@ export default{
             })
           }
           this.posts = results
+          console.log(results)
         }).catch(error=>{
           console.log(error)
         })
     },
     openPostModal(pk){
-     this.singlePostPk = pk
+     this.singlePostPk = pk;
+     this.postModalOpen=true;
     }
   },
   beforeMount(){
     this.getPosts()
-
   }
 }
 </script>
