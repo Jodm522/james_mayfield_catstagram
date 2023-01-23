@@ -4,6 +4,7 @@ import FormData from 'form-data';
 
 export default {
 login(context, payload){
+  console.log("HERE")
     return new Promise((res, rej)=>{axios({
         method: 'post',
         url:'http://catstagram.lofty.codes/api/users/login/',
@@ -14,38 +15,40 @@ login(context, payload){
           "last_name": ""
         }
       }).then((response)=>{
+        
        context.commit('setuser',{
         email : payload.email
-        
        },
        res(response))
       }).catch((error)=>{
         rej(error)
       })
     })
-      
-      
-
 },
+
+
 signup(context, payload){
-
-    return new Promise((res, rej)=>{axios({
-        method: 'post',
-url:'http://catstagram.lofty.codes/api/users/',
-data: {
-  "email": payload.email,
-  "password": payload.password,
-  "first_name": payload.firstName,
-  "last_name": payload.lastName
-}
-      }).then((response)=>{
-        res(response)
-
-      }).catch((error)=>{
-        rej(error)
-      })
+  return new Promise((res, rej)=>{axios({
+    url:'http://catstagram.lofty.codes/api/users/',
+    data: {
+      "email": payload.email,
+      "password": payload.password,
+      "first_name": payload.firstName,
+      "last_name": payload.lastName
+    }
+    }).then((response)=>{
+     context.commit('setuser',{
+      email : payload.email
+      
+     },
+     res(response))
+    }).catch((error)=>{
+      rej(error)
     })
+  })
 },
+
+
 
 // I know this isn't a great place to do this, 
 // but I feel like it's not worth it to make a whole new store for it
