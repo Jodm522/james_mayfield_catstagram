@@ -12,9 +12,12 @@
                <div v-if="uploadErrors" class="uploadAlert">
                 {{ uploadErrorMessage }}
                </div> 
-               <div v-if="isLoading" class="loadingP">Uploading...</div>
+               <div v-if="isLoading" class="loadingP">Uploading...</div>    
             </div>
-            <button class="formButton">Upload</button>
+            <button v-if="!postSuccessful && !isLoading" class="formButton">Upload</button>
+            <p v-else-if="postSuccessful">
+                <img class="successCheck" src="../assets/images/successCheck.png"/>
+                </p>
         </form>
         
     </div>
@@ -26,6 +29,7 @@
         </div>
         <div class="logoutButtonHolder">
             <button class="formButton">Logout</button>
+            <button class="formButton" @click="closeModal">Cancel</button>
         </div>
 
 
@@ -33,23 +37,33 @@
 </template>
 <script>
 export default{
+
     data(){
+        
         return{
           newPostTitle:"",  
           uploadErrorMessage:"",
           uploadErrors:false,
           isLoading:false,
-          selectedFile:null
+          selectedFile:null,
+          postSuccessful:false
         }
         
     },
     methods:{
+        closeModal(){
+            this.$emit('closeModal')
+        },
         async submitUpload(){
             this.isLoading=true
+
             await this.$store.dispatch('upload',{
                 name:this.newPostTitle,
                 image:this.selectedFile
-            }).then(()=>{this.isLoading=false})
+            }).then(()=>{this.isLoading=false, this.postSuccessful=true, setTimeout(() => {
+                this.postSuccessful = false 
+                this.closeModal();
+            }, 2000);})
             .catch((error)=>{console.log(error);this.isLoading=false;
             this.uploadErrors=true;
             this.uploadErrorMessage="We encountered an issue, please try again later." })
@@ -58,8 +72,7 @@ export default{
             this.uploadErrors=false;
          
             if(this.newPostTitle.trim() === ''){
-                this.uploadErrors=true
-             
+                this.uploadErrors=true     
                 this.uploadErrorMessage="Title cannot be empty"
             }
             else if(!this.selectedFile){
@@ -77,7 +90,6 @@ export default{
         },
         uploadImage(e){
            this.selectedFile = e.target.files[0]
-            console.log(this.selectedFile)
         }
 
     }
@@ -169,7 +181,7 @@ input::file-selector-button {
 }
 .logoutButtonHolder{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     /* background-color: aqua; */

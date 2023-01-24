@@ -1,10 +1,11 @@
 import axios from "axios";
 import FormData from 'form-data';
+// import { url } from "inspector";
 // import {fs} from 'file-system';
 
 export default {
 login(context, payload){
-  console.log("HERE")
+  // console.log("HERE")
     return new Promise((res, rej)=>{axios({
         method: 'post',
         url:'http://catstagram.lofty.codes/api/users/login/',
@@ -29,6 +30,7 @@ login(context, payload){
 
 signup(context, payload){
   return new Promise((res, rej)=>{axios({
+    method: 'post',
     url:'http://catstagram.lofty.codes/api/users/',
     data: {
       "email": payload.email,
@@ -50,7 +52,7 @@ signup(context, payload){
 
 
 
-// I know this isn't a great place to do this, 
+// I know this isn't a great place to put these, 
 // but I feel like it's not worth it to make a whole new store for it
 upload(context, payload){
 const form = new FormData()
@@ -64,6 +66,32 @@ form.append("image",payload.image, payload.image.name)
       rej(error)
     })
   })
+},
+
+
+uploadComment(context, payload){
+  // console.log(payload)
+  return new Promise((res, rej)=>{axios({
+    method: 'post',
+    url:'http://catstagram.lofty.codes/api/comments/',
+    data: {
+      "text": payload.text,
+      "entry": payload.entry
+    }
+    }).then((response)=>{
+     res(response)
+     console.log(response)
+    }).catch((error)=>{
+      rej(error)
+      // console.log(error)
+    })
+  })
 }
 
+
+
+
+
 }
+
+

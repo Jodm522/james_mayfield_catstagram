@@ -96,7 +96,7 @@
 
 <script>
 export default{
-    props:['showMenuModal'],
+    // props:['showMenuModal'],
     data(){
         
         return{

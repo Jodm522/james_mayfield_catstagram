@@ -28,10 +28,15 @@
         <div v-if="commentsActive" class="newCommentContainer">
             <div class="newCommentTitle">New Comment</div>
             <div class="commentArea">
-            <textarea class="textArea" v-model="newComment"/>
+            <textarea v-if ="!isSubmitting && !successfulSubmit" class="textArea" v-model="newComment"/>
+            <div v-else-if="isSubmitting" class="loadingP commentUpload">Uploading...</div> 
+            <p class ="commentCheck" v-else-if="successfulSubmit">
+                
+                <img class="successCheck" src="../assets/images/successCheck.png"/>
+                </p>
             <div class="commentButtonBox">
             <button class="formButton" @click="commentsActive=false">Cancel</button>
-            <button class="formButton" @click="submitComment">Submit</button>
+            <button class="formButton" @click="submitComment" >Submit</button>
             </div>
             
          </div>
@@ -57,6 +62,9 @@ export default{
         comments:null,
         imageURL:null,
         commentsActive:false,
+        isSubmitting: false,
+        successfulSubmit: false,
+        newComment:""
     }
 
     },
@@ -72,8 +80,19 @@ export default{
         }).catch(error=>{
           console.log(error)
         })
-    }
     },
+    async submitComment(){
+        // console.log("here")
+        await this.$store.dispatch('uploadComment',{
+            text: this.newComment,
+            entry: this.pk
+        }).then(()=>{this.isSubmitting=false, this.successfulSubmit=true, setTimeout(() => {
+            this.commentsActive=false
+            this.successfulSubmit=false
+        }, 2000);})
+    },
+    },
+    
     watch:{
         pk:function(){
             this.getPosts()
@@ -256,5 +275,19 @@ font-size: 3.5vw;
     font-size: 3vw;
     padding-left: 2vw;
   
+}
+.commentUpload{
+    height: 16vh;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+.commentCheck{
+    height:16vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background-color: aqua; */
 }
 </style>
