@@ -1,3 +1,10 @@
+<script setup>
+import HelloWorld from './components/CTGhead.vue'
+import PostPreviews from './components/PostPreviews.vue'
+import Navbar from './components/Navbar.vue';
+
+</script>
+
 
 <template>
   <Navbar />
@@ -15,9 +22,7 @@
 
 
 <script>
-import HelloWorld from './components/CTGhead.vue'
-import PostPreviews from './components/PostPreviews.vue'
-import Navbar from './components/Navbar.vue';
+
 
 export default{
 
