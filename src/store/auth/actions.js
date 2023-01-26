@@ -59,14 +59,21 @@ const form = new FormData()
 form.append("name", payload.name)
 form.append("image",payload.image, payload.image.name)
 
-  return new Promise((res, rej)=>{axios.post(
-    'http://catstagram.lofty.codes/api/posts/', form).then((response)=>{
+  return new Promise((res, rej)=>{axios(
+   { method: 'post',
+    url:'http://catstagram.lofty.codes/api/posts/',
+     data:{form}}).then((response)=>{
       res(response)
     }).catch((error)=>{
       rej(error)
     })
   })
 },
+
+
+
+
+
 
 
 uploadComment(context, payload){
@@ -86,7 +93,9 @@ uploadComment(context, payload){
       // console.log(error)
     })
   })
+
 }
+
 
 
 

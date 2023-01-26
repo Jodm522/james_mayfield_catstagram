@@ -3,15 +3,9 @@ import HelloWorld from './components/CTGhead.vue'
 import PostPreviews from './components/PostPreviews.vue'
 import Navbar from './components/Navbar.vue';
 
-// import { useDark, useToggle  } from "@vueuse/core";
-// const isDark = useDark({
-//   selector: "div", //element to add attribute to
-//   attribute: "class", // attribute name
-//   valueDark: "custom-dark", // attribute value for dark mode
-//   valueLight: "custom-light", // attribute value for light mode
-// });
-// const toggleDark = useToggle(isDark);
+
 </script>
+
 
 <template>
   <Navbar />
@@ -32,9 +26,7 @@ import Navbar from './components/Navbar.vue';
 
 
 <script>
-export default{
 
-}
 </script>
 
 <style scoped>
