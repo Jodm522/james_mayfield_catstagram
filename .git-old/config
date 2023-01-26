@@ -1,0 +1,11 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = https://github.com/Jodm522/james_mayfield_catstagram.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "laptopWork"]
+	remote = origin
+	merge = refs/heads/laptopWork
