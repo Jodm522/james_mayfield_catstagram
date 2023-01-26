@@ -74,6 +74,8 @@ form.append("image",payload.image, payload.image.name)
 
 
 
+
+
 uploadComment(context, payload){
   // console.log(payload)
   return new Promise((res, rej)=>{axios({
@@ -91,12 +93,12 @@ uploadComment(context, payload){
       // console.log(error)
     })
   })
-},
 
-
-testFunction(){
-return 2
 }
+
+
+
+
 
 
 }

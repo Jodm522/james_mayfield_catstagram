@@ -3,18 +3,22 @@ import HelloWorld from './components/CTGhead.vue'
 import PostPreviews from './components/PostPreviews.vue'
 import Navbar from './components/Navbar.vue';
 
+
 </script>
 
 
 <template>
   <Navbar />
-
+ 
   <header>
     <img alt="Catstagram Logo" class="logo" src="./assets/images/darkmodeCat.png"/>
     <div class="wrapper">
       <HelloWorld msg="Catstagram" />
     </div>
-  </header>
+  </header> 
+  <!-- <button @click="toggleDark()">
+    Toggle Color Mode
+  </button> -->
   <main>
     <PostPreviews/>
   </main>
@@ -23,10 +27,6 @@ import Navbar from './components/Navbar.vue';
 
 <script>
 
-
-export default{
-
-}
 </script>
 
 <style scoped>
