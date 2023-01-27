@@ -56,13 +56,15 @@ signup(context, payload){
 // but I feel like it's not worth it to make a whole new store for it
 upload(context, payload){
 const form = new FormData()
+console.log(payload.name)
 form.append("name", payload.name)
 form.append("image",payload.image, payload.image.name)
-
+console.log(form)
   return new Promise((res, rej)=>{axios(
    { method: 'post',
     url:'http://catstagram.lofty.codes/api/posts/',
-     data:{form}}).then((response)=>{
+     data:form})
+     .then((response)=>{
       res(response)
     }).catch((error)=>{
       rej(error)

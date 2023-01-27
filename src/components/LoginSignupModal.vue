@@ -1,8 +1,11 @@
 
-
+<script setup>
+import { MqResponsive } from "vue3-mq";
+</script>
 
 <template>
-    <div class="loginSignupFormContainer">
+    <MqResponsive target="phone">
+        <div class="loginSignupFormContainer">
 <div class="loginSignUpButtons">
     
     <div class="LoginSignupSelector" v-bind:class="[loginIsActive? `selected`: 'unselected']" @click="toggleLogin">Login</div>
@@ -91,12 +94,110 @@
 
 
 </div>
+    </MqResponsive>
+
+    <MqResponsive :target = '["laptop","desktop","tablet"]'>
+        <div class="loginSignupFormContainer-desktop">
+<div class="loginSignUpButtons-desktop">
+    <div class="LoginSignupSelector-desktop" v-bind:class="[loginIsActive? `selected-desktop`: 'unselected-desktop']" @click="toggleLogin">Login</div>
+    <div class="LoginSignUpSelector-desktop" v-bind:class="[signupIsActive? `selected-desktop`: 'unselected-desktop']" @click="toggleSignup">Sign up</div>
+    <!-- <div @click="closeModal">{{ showMenuModal }}</div> -->
+</div>
+
+<div v-if="loginIsActive" class="loginFormContainer-desktop">
+<form @submit.prevent>
+
+    <div class="form-control-desktop">
+     <input id = "username" type="text" placeholder="Your Email" v-model="loginEmail"/>   
+        </div>
+     <div class="form-control-desktop passwordBlock-desktop">
+     <input id = "password" v-bind:type="[passwordIsVisible? `text` : `password`]" placeholder="Password" v-model="loginPassword"/>   
+   <div class="passwordVisibilityContainer-desktop">
+    <input class="checkbox-desktop" type="checkbox" @click="changePasswordVisibility"/> 
+   <label for="checkbox"> Show password</label>
+   </div>
+     <div class="loginErrorContainer-desktop"><div v-if="loginError" class="loginAlert">{{ loginAlert }}</div></div>
+</div>
+<p v-if="isLoading" class="loadingP-desktop" >Authenticating...</p>
+<p v-else-if="loginSuccessful">
+<img class="successCheck-desktop" src="../assets/images/successCheck.png"/>
+</p>
+<div v-else class="formButtonContainer-desktop">
+    
+    <button class="formButton-desktop" @click="submitLogin">Login</button>
+    <button class="formButton-desktop" @click="closeModal">Cancel</button>
+    </div>
+</form>
+
+
+
+</div>
+
+<div v-if="signupIsActive" class="signupFormContainer-desktop">
+    <form @submit.prevent>
+<div v-if="!signupNamesValidated" class="signupStepContainer-desktop" >
+    <div class="desktopInputContainers">
+        <input class="nameArea-desktop" id = "firstName" type="text" placeholder="First Name" v-model="signupFirstName"/> 
+    <input class="nameArea-desktop" id = "lastName" type="text" placeholder="Last Name" v-model="signupLastName"/> 
+    </div>
+    
+    <div class="signupPasswordVisibilityContainer-desktop"></div>
+    <div class="signupErrorContainer-desktop"><div v-if="nameSignupError" class="loginAlert">{{nameAlert}}</div></div>
+
+    <div class="signupFormButtonContainer-desktop">
+    <button class="signupFormButton-desktop" @click="closeModal">Cancel</button>
+    <button class="signupFormButton-desktop" @click="validateNames">Next</button>
+    </div>
+    
+</div>
+
+<div  v-if="signupNamesValidated && !signupEmailValidated" class="form-control-desktop signupStepContainer-desktop">
+    <div class="desktopInputContainers">
+ <input class="signupEmail-desktop" id = "email" type="text" placeholder="Your Email" v-model="signupEmail"/>   
+ <input class="signupEmail-desktop" id = "emailDupe" type="text" placeholder="Confirm Email" v-model="signupEmailReEnter"/>
+</div>
+<div class="signupPasswordVisibilityContainer-desktop"></div>
+ <div class="signupErrorContainer-desktop"><div v-if="emailSignupError" class="loginAlert">{{ emailAlert }}</div></div>
+
+    <div class="SignupFormButtonContainer-desktop">
+    <button class="signupFormButton-desktop" @click="signupNamesValidated= false">Back</button>
+    <button class="signupFormButton-desktop" @click="validateEmails">Next</button>
+    </div>  
+    </div>
+ <div v-if="signupEmailValidated" class="form-control-desktop signupStepContainer-desktop">
+    <div class="desktopInputContainers">
+ <input class="signupPassword-desktop" id = "password" v-bind:type="[passwordIsVisible? `text` : `password`]" placeholder="Password" v-model="signupPassword"/> 
+ <input class="signupPassword-desktop" id = "password" v-bind:type="[passwordIsVisible? `text` : `password`]" placeholder="Verify Password" v-model="signupPasswordReEnter"/>  
+</div>
+<div class="signupPasswordVisibilityContainer-desktop">
+<input class="checkbox-desktop" type="checkbox" @click="changePasswordVisibility"/> 
+<label for="checkbox-desktop"> Show passwords</label>
+</div>
+ <div class="signupErrorContainer-desktop"><div v-if="passwordSignupError" class="loginAlert">{{ passwordAlert }}</div></div>
+ <p v-if="isLoading" class="loadingP-desktop" >Authenticating...</p>
+ <p v-else-if="loginSuccessful">
+<img class="successCheck-desktop" src="../assets/images/successCheck.png"/>
+</p>
+<div v-else class="signupPasswordButtonContainer-desktop">
+<button class="signupFormButton-desktop" @click="signupEmailValidated= false">Back</button>
+<button class="signupFormButton-desktop" @click="validatePasswords">Sign up</button>
+</div>
+</div>
+</form>
+</div>
+
+
+
+</div>
+    </MqResponsive>
 </template>
 
 
 <script>
 export default{
-    // props:['showMenuModal'],
+    components:{
+        MqResponsive
+    },
     data(){
         
         return{
@@ -397,9 +498,9 @@ input[type=text], input[type=password]{
 }
 .signupFormButton{
     height: 4.5vh;
- aspect-ratio: 1.7;
+ /* aspect-ratio: 3; */
  min-width: min-content;
- font-size: 1.5vh;
+ font-size: 2vh;
  margin:5px;  
  border-radius:8px; 
  border: 1px solid rgb(218, 98, 13);
@@ -474,5 +575,236 @@ input[type=text], input[type=password]{
 @keyframes fadeSpin{
     0% { opacity: 0; transform: rotate(180deg);}
     100%{ opacity: 1;}
+}
+
+/* Desktop Setup */
+
+
+.loginSignupFormContainer-desktop{
+    margin: auto;
+display: flex;
+flex-direction: column;
+top:10vw;
+height:35vh;
+aspect-ratio: 16/9;
+max-width: 90vw;
+background-color: #181818; 
+border-radius: 10px;
+border:1px solid rgb(75, 74, 74);
+}
+
+.loginSignUpButtons-desktop{
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width:50%;
+    font-size: 5vh;
+}
+.selected-desktop{
+    border-bottom: 2px solid rgb(75, 74, 74);
+    color:rgb(218, 98, 13);
+    font-weight: 500;
+}
+.unselected-desktop, .selected-desktop{
+    height: 7vh;
+    width: 20vw;
+    text-align: center;
+    padding-bottom: .2vh;
+}
+.loginFormContainer-desktop, .signupFormContainer-desktop{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    margin-top: 2vh;
+}
+
+
+.checkbox-desktop{
+    background:black;
+    accent-color: rgb(218, 98, 13);
+    margin-right: .5vw;
+}
+
+input[type=text], input[type=password]{
+    background-color: rgb(75, 74, 74);
+    border-radius: 8px;
+    color: #d1cece;
+    height: 4vh;
+    font-weight: 300;
+    font-size: 2vh;
+    margin-top: 1vh;
+    box-shadow: none;
+    border: 1px solid rgb(218, 98, 13);
+}
+
+.passwordVisibilityContainer-desktop{
+ display: flex;
+ flex-direction: row;
+ justify-content: center;
+ margin-bottom: 5%;
+}
+.formButtonContainer-desktop{
+    display: flex;
+
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 0;
+   
+}
+.formButton-desktop{
+ height: 4.5vh;
+ margin:5px;  
+ border-radius:8px; 
+ border: 1px solid rgb(218, 98, 13);
+ background-color: rgb(75, 74, 74);
+ color: #d1cece;
+ font-weight: 600;
+ text-align: center;
+ justify-content: center;
+aspect-ratio: 3;
+min-width: min-content;
+font-size: 2vh;
+ 
+}
+.loginAlert-desktop{
+    margin: auto;
+    text-align: center;
+    color: red;
+    animation: blink  1s ;
+    width: 65%;
+    border-radius:8px
+}
+.loginErrorContainer-desktop{
+    height: 2vh;
+    /* background-color: aqua; */
+}
+.signupErrorContainer-desktop{
+    /* padding: 10%; */
+    height: 5vh;
+    /* background-color: red; */
+    width: 25vw
+}
+@keyframes blink{
+    0% {background-color: red;}
+    25%{background-color: #181818;}
+    50% {background-color: red;}
+    100%{background-color: #181818;}
+}
+.signupFormContainer-desktop{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.namesContainer-desktop, .signupPasswordBlock-desktop{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+}
+.signupStepContainer-desktop{
+    text-align: center;
+    margin-left: 2vw;
+    margin-right: 2vw;
+    animation: fadeIn 1s;
+    
+}
+@keyframes fadeIn{
+    0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+.signupInput-desktop{
+    text-align: center;
+}
+.signupFormButton-desktop{
+    height: 4.5vh;
+
+ aspect-ratio: 3;
+ min-width: min-content;
+ font-size: 2vh;
+ margin:5px;  
+ border-radius:8px; 
+ border: 1px solid rgb(218, 98, 13);
+ background-color: rgb(75, 74, 74);
+ color: #d1cece;
+ font-weight: 600;
+ text-align: center;
+ justify-content: center;
+ width:2vw;
+}
+
+.signupPasswordVisibilityContainer-desktop{
+    /* background-color: aqua; */
+    height: 4vh;
+}
+.loadingP-desktop{
+    text-align: center;
+    animation: rainbow 1s infinite;
+}
+
+.rainbow-desktop{
+		animation: rainbow 2.5s linear;
+		animation-iteration-count: infinite;
+}
+
+
+@keyframes rainbow{
+		100%,0%{
+			color: rgb(255,0,0);
+		}
+		8%{
+			color: rgb(255,127,0);
+		}
+		16%{
+			color: rgb(255,255,0);
+		}
+		25%{
+			color: rgb(127,255,0);
+		}
+		33%{
+			color: rgb(0,255,0);
+		}
+		41%{
+			color: rgb(0,255,127);
+		}
+		50%{
+			color: rgb(0,255,255);
+		}
+		58%{
+			color: rgb(0,127,255);
+		}
+		66%{
+			color: rgb(0,0,255);
+		}
+		75%{
+			color: rgb(127,0,255);
+		}
+		83%{
+			color: rgb(255,0,255);
+		}
+		91%{
+			color: rgb(255,0,127);
+		}
+}
+.successCheck-desktop{
+    /* background-color: aqua; */
+    display: flex;
+    margin: auto;
+    height:6vh;
+    animation: 1.5s fadeSpin;
+}
+@keyframes fadeSpin{
+    0% { opacity: 0; transform: rotate(180deg);}
+    100%{ opacity: 1;}
+}
+.desktopInputContainers{
+    display: flex;
+    flex-direction: column;
+    /* background-color: aqua; */
+    align-items: center;
+    justify-content: center;
 }
 </style>

@@ -1,16 +1,17 @@
-import { mount, flushPromises } from '@vue/test-utils'
-import axios from 'axios'
-
 import {fs} from 'file-system';
 import actions from '../src/store/auth/actions'
-// import FileReader from
+
+import PostPreviews from "../src/components/PostPreviews.vue"
+
 const testImage = `../src/assets/images/loss.jpg`
-
-import PostList from './PostList.vue'
-import {actions} from '../src/store/auth/actions'
+import { mount } from '@vue/test-utils';
 
 
-test('should work as expected', () => {
+
+
+
+
+test('Tests should work as expected', () => {
     expect(Math.sqrt(4)).toBe(2)
   })
 
@@ -21,6 +22,7 @@ let body = {}
 
 jest.mock("axios", () => ({
   __esModule: true,
+
   post: (_url, _body) => { 
     return new Promise((resolve) => {
       url = _url
@@ -29,6 +31,7 @@ jest.mock("axios", () => ({
     })
     
   },
+
     default:  (_url, _body) => { 
       return new Promise((resolve) => {
         url = _url
@@ -37,14 +40,20 @@ jest.mock("axios", () => ({
       })
       
     },
+    get:  (_url,_body) => { 
+        return new Promise((resolve) => {
+          url = _url
+          body= _body
+          data= {"test":"TEst"}
+          resolve(true)
+        })
+        
+      },
     
 }))
 
   describe("uploadComment",()=>{
-    it('Uploads comments correctly', async()=>{
-
-  describe("uploadComment",()=>{
-    it('Uploaded a comment', async()=>{
+    it('Uploads a comment', async()=>{
 
         const commit = jest.fn()
         const text = "Test text"
@@ -75,19 +84,20 @@ jest.mock("axios", () => ({
 
 
   const testImg = fs.createReadStream(testImage)
+  const name = "Test name"
+      const image = testImg
+
   describe("postImage",()=>{
     it("Posts an image", async()=>{
       const commit = jest.fn()
-      const name = "Test name"
-      const image = testImg
-      
       await actions.upload({commit}, {name,image})
       expect (url.url).toBe('http://catstagram.lofty.codes/api/posts/')
-      expect (FileReader.readAsDataURL(url.data)).toBe(name)
     })
-
-        expect(url).toBe('http://catstagram.lofty.codes/api/comments/')
-        expect(body).toEqual({text, entry})
     }) 
 
-  })
+    describe("displaysImages",()=>{
+     it('displaysImages', async()=>{
+        const wrapper = mount(PostPreviews)
+        expect(wrapper.find('img').attributes('src')).toBe("a")
+     })
+    } )

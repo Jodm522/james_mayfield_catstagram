@@ -1,5 +1,10 @@
+<script setup>
+import { MqResponsive } from "vue3-mq";
+</script>
+
 <template>
-    <div class="postLogoutFormContainer">
+    <MqResponsive target = "phone">
+         <div class="postLogoutFormContainer">
     <div className="postImageContainer">
         <div className = "postImageTitle">Post a new cat!</div>
         <form class="postLogoutForm" @submit.prevent="validateUpload">
@@ -34,10 +39,51 @@
 
 
 </div>
+    </MqResponsive>
+    <MqResponsive :target = '["laptop","desktop","tablet"]'>
+         <div class="postLogoutFormContainer-desktop">
+    <div className="postImageContainer-desktop">
+        <div className = "postImageTitle-desktop">Post a new cat!</div>
+        <form class="postLogoutForm-desktop" @submit.prevent="validateUpload">
+            <input class="newPostTitle-desktop" id = "newPostTitle" type="text" placeholder="Give your post a name" v-model="newPostTitle"/>
+            <div class="fileUploadContainer-desktop">
+                <input class="newPostImage-desktop" type="file" accept="image/*" @change="uploadImage" />
+            </div>
+            
+            <div class="uploadErrorHolder-desktop">
+               <div v-if="uploadErrors" class="uploadAlert">
+                {{ uploadErrorMessage }}
+               </div> 
+               <div v-if="isLoading" class="loadingP-desktop">Uploading...</div>    
+            </div>
+            <button v-if="!postSuccessful && !isLoading" class="formButton-desktop">Upload</button>
+            <p v-else-if="postSuccessful">
+                <img class="successCheck-desktop" src="../assets/images/successCheck.png"/>
+                </p>
+        </form>
+        
+    </div>
+
+<div class="divider">
+            <div class="dividerLine"></div>
+            <div class="orHolder">Or</div>
+            <div class="dividerLine"></div>
+        </div>
+        <div class="logoutButtonHolder">
+            <button class="formButton">Logout</button>
+            <button class="formButton" @click="closeModal">Cancel</button>
+        </div>
+
+
+</div>
+    </MqResponsive>
+   
 </template>
 <script>
 export default{
-
+        components:{
+            MqResponsive
+        },
     data(){
         
         return{
@@ -198,5 +244,117 @@ input::file-selector-button {
     25%{background-color: #181818;}
     50% {background-color: red;}
     100%{background-color: #181818;}
+}
+/* DEsktop Setup */
+
+.postLogoutFormContainer-desktop{
+    margin: auto;
+display: flex;
+flex-direction: column;
+top:15vw;
+height:45vh;
+aspect-ratio: 16/9;
+max-width: 90vw;
+background-color: #181818; 
+border-radius: 10px;
+border:1px solid rgb(75, 74, 74);
+}
+.postImageContainer-desktop{
+    height:70%;
+    display: flex;
+    flex-direction: column;
+}
+.postImageTitle-desktop{
+    font-size: 4vh;
+    text-align: center;
+    border-bottom: 2px solid rgb(75, 74, 74);
+    color:rgb(218, 98, 13);
+    font-weight: 500;
+    width:50%;
+    margin:5px auto;
+   
+}
+.postLogoutForm-desktop{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* background-color: aqua; */
+    
+}
+input::file-selector-button{
+ min-width: min-content;
+ font-size: 1.5vh;
+ margin:5px;  
+ border-radius:8px; 
+ border: 1px solid rgb(218, 98, 13);
+ background-color: rgb(75, 74, 74);
+ color: #d1cece;
+ font-weight: 600;
+ height: 4.5vh;
+}
+.fileUploadContainer-desktop{
+        width:100%;
+        display: flex;
+        flex-direction: column;
+       align-items: center;
+       justify-self: center;
+        
+}
+.uploadErrorHolder-desktop{
+    /* background-color: red; */
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+    height: 5vh;
+    width: 100%;
+}
+.divider-desktop{
+    /* background-color: aqua; */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 1vh;
+ 
+
+}
+.dividerLine-desktop{
+
+    width:46%;
+    border-bottom: 2px solid rgb(218, 98, 13);
+    transform: translateY(-50%);
+}
+.orHolder-desktop{
+    color:rgb(218, 98, 13);
+    font-weight: 500;
+    
+}
+.logoutButtonHolder-desktop{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    /* background-color: aqua; */
+    height: 20%;
+}
+.uploadAlert-desktop{
+    text-align: center;
+    color: red;
+    animation: blink  1s ;
+    /* background-color: aqua; */
+}
+@keyframes blink{
+    0% {background-color: red;}
+    25%{background-color: #181818;}
+    50% {background-color: red;}
+    100%{background-color: #181818;}
+}
+.newPostImage-desktop{
+    display: flex;
+    flex-direction: column;
+    /* background-color: aqua; */
+    align-items: center;
+    justify-content: center;
+    left:4vw;
 }
 </style>
